@@ -3,6 +3,8 @@ import { Bike, config } from "../../pages/book";
 import { Button, DatePicker, Space } from "antd";
 import { Form } from "antd";
 import { Select } from "antd";
+import * as a from "axios";
+const axios = a.default;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const dateFormat = "DD/MM/YYYY";
@@ -13,7 +15,7 @@ interface SelectionProps {
 const Selection: FC<SelectionProps> = ({ config }) => {
   return (
     <Form
-      onFinish={(values) => {
+      onFinish={async (values) => {
         const payload = {
           startDate: values.dates[0].format(dateFormat),
           endDate: values.dates[1].format(dateFormat),

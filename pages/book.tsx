@@ -5,6 +5,7 @@ import Header from "../HOCs/Header/header";
 import { Steps } from "antd";
 import Bikes from "../Components/Bikes/bikes";
 import UserDetails from "../Components/UserDetails/UserDetails";
+import Payment from "../Components/Payment/Payment";
 const { Step } = Steps;
 
 interface BookProps {
@@ -83,11 +84,22 @@ const Book: FC<BookProps> = ({ locations }) => {
   return (
     <Container>
       <Header heading={"Book a Bike"} showHome />
-      <Steps current={stage} style={{ display: "block", marginLeft: "35%" }}>
-        <Step title="Select Date and Location" />
-        <Step title="Select Bike" />
-        <Step title="Enter Details" />
-      </Steps>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100vw",
+          padding: "30px",
+        }}
+      >
+        <Steps current={stage}>
+          <Step title="Select Date and Location" />
+          <Step title="Select Bike" />
+          <Step title="Enter Details" />
+          <Step title="Payment" />
+        </Steps>
+      </div>
 
       {stage == 0 && (
         <div
@@ -105,7 +117,8 @@ const Book: FC<BookProps> = ({ locations }) => {
         </div>
       )}
       {stage == 1 && <Bikes config={config} />}
-      {stage == 2 && <UserDetails />}
+      {stage == 2 && <UserDetails config={config} />}
+      {stage == 3 && <Payment config={config} />}
     </Container>
   );
 };
