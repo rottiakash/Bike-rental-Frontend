@@ -8,6 +8,7 @@ export interface Reservation {
   gender: string;
   drivinglicense: string;
   address: string;
+  email: string;
   sdate: string;
   edate: string;
   model: string;
@@ -42,6 +43,10 @@ const columns = [
   {
     title: "Address",
     dataIndex: "address",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
   },
   {
     title: "Start date",

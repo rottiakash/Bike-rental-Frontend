@@ -1,3 +1,3 @@
 export default function useConfig() {
-  return { API_URL: "https://a1a1202da47a.ngrok.io" };
+  return { API_URL: "http://127.0.0.1:5000/" };
 }

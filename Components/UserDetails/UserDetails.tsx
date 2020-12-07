@@ -46,6 +46,13 @@ const UserDetails: FC<UserDetailsProps> = ({ config }) => {
             </Select>
           </Form.Item>
           <Form.Item
+            label="Email"
+            name="email"
+            rules={[{ required: true, message: "Please input your Email!" }]}
+          >
+            <Input placeholder={"Enter Email"} type="email" />
+          </Form.Item>
+          <Form.Item
             label="Address"
             name="Address"
             rules={[{ required: true, message: "Please input your Address!" }]}

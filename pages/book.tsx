@@ -50,6 +50,7 @@ export interface config {
       endDate: string;
       Name?: string;
       Address?: string;
+      email?: string;
       License?: string;
       gender?: string;
       age?: number;
@@ -131,7 +132,6 @@ export async function getServerSideProps(context) {
   const { API_URL } = useConfig();
   const res = await Axios.get(`${API_URL}/locations`);
   const locations = res.data.location;
-  //let locations = ["Rajajinagar", "Basaveshwarnagar", "MG Road"]; //GET from server
   return {
     props: { locations }, // will be passed to the page component as props
   };

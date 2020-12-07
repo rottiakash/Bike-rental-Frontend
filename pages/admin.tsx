@@ -5,6 +5,7 @@ import Header from "../HOCs/Header/header";
 import { Modal, Tabs, Form, Input, Button } from "antd";
 import BikeTable from "../Components/BikeTable/BikeTable";
 import { Bike } from "./book";
+import Axios from "axios";
 import ReservationTable, {
   Reservation,
 } from "../Components/Reservation Table/ReservationTable";
@@ -19,9 +20,9 @@ interface AdminProps {
 const Admin: FC<AdminProps> = ({ bikes, reservations }) => {
   const [visible, setVisible] = useState(false);
   return (
-    <Container>
+    <div>
       <Header heading={"Admin Portal"} showHome showLogout />
-      <Tabs defaultActiveKey="1">
+      <Tabs defaultActiveKey="1" style={{ padding: "10px" }}>
         <TabPane tab="Bikes" key="1">
           <div style={{ display: "flex", flexDirection: "column" }}>
             <Button type="primary" onClick={() => setVisible(true)}>
@@ -112,7 +113,7 @@ const Admin: FC<AdminProps> = ({ bikes, reservations }) => {
           <ReservationTable dataSource={reservations} />
         </TabPane>
       </Tabs>
-    </Container>
+    </div>
   );
 };
 
@@ -120,31 +121,6 @@ export default Admin;
 
 export async function getServerSideProps(context) {
   const { token } = parseCookies(context);
-  const bikes: Array<Bike> = [
-    {
-      id: 1,
-      model: "Bullet",
-      priceperday: 100,
-      location: "Rajajinagar",
-      no_of_units: 10,
-      imageurl:
-        "https://imgd.aeplcdn.com/393x221/bw/models/royal-enfield-bullet-350-ks--x--efi-bs-vi20200401130113.jpg?q=85",
-    },
-  ];
-  const reservations: Array<Reservation> = [
-    {
-      booking_id: 1,
-      Name: "Anandteerth",
-      age: 21,
-      gender: "male",
-      drivinglicense: "dl1",
-      address: "8-11-182/19",
-      sdate: "09/12/2020",
-      edate: "11/12/2020",
-      model: "Yamaha-MT-09",
-      location: "Basaveshwarnagar",
-    },
-  ];
   if (!token) {
     return {
       redirect: {
@@ -153,6 +129,30 @@ export async function getServerSideProps(context) {
       },
     };
   }
+  const res = await Axios.get(`http://localhost:5000/getBikes`, {
+    headers: { Authorization: `${token}` },
+  });
+  if (res.data == "TOKEN DECODE FAILED")
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  const bikes: Array<Bike> = res.data.result;
+  const res1 = await Axios.get(`http://localhost:5000/getReservations`, {
+    headers: { Authorization: `${token}` },
+  });
+  if (res1.data == "TOKEN DECODE FAILED")
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+
+  const reservations: Array<Reservation> = res1.data.result;
+
   return {
     props: { bikes, reservations }, // will be passed to the page component as props
   };
