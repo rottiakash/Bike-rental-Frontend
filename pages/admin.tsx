@@ -131,7 +131,20 @@ export async function getServerSideProps(context) {
         "https://imgd.aeplcdn.com/393x221/bw/models/royal-enfield-bullet-350-ks--x--efi-bs-vi20200401130113.jpg?q=85",
     },
   ];
-  const reservations: Array<Reservation> = [];
+  const reservations: Array<Reservation> = [
+    {
+      booking_id: 1,
+      Name: "Anandteerth",
+      age: 21,
+      gender: "male",
+      drivinglicense: "dl1",
+      address: "8-11-182/19",
+      sdate: "09/12/2020",
+      edate: "11/12/2020",
+      model: "Yamaha-MT-09",
+      location: "Basaveshwarnagar",
+    },
+  ];
   if (!token) {
     return {
       redirect: {

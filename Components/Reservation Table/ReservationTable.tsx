@@ -67,7 +67,7 @@ const ReservationTable: FC<ReservationTableProps> = ({ dataSource }) => {
   return (
     <div>
       <Popconfirm
-        title="Are you sure to delete this Bike?"
+        title="Are you sure to delete this Reservation?"
         okText="Yes"
         cancelText="No"
       >
@@ -87,6 +87,11 @@ const ReservationTable: FC<ReservationTableProps> = ({ dataSource }) => {
       <Table
         dataSource={dataSource}
         columns={columns}
+        expandable={{
+          expandedRowRender: (row) => {
+            return <p>Address: {row.address}</p>;
+          },
+        }}
         rowSelection={{
           type: "radio",
           onChange: (_, selectedRows) => {
