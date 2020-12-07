@@ -5,6 +5,7 @@ import { Form } from "antd";
 import { Select } from "antd";
 import * as a from "axios";
 import Spinner from "../../HOCs/spinner";
+import useConfig from "../../Hooks/useConfig";
 const axios = a.default;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -15,6 +16,7 @@ interface SelectionProps {
 
 const Selection: FC<SelectionProps> = ({ config }) => {
   const [spinning, setSpinning] = useState(false);
+  const { API_URL } = useConfig();
   return (
     <Spinner spinning={spinning}>
       <Form

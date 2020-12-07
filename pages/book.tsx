@@ -6,6 +6,8 @@ import { Steps } from "antd";
 import Bikes from "../Components/Bikes/bikes";
 import UserDetails from "../Components/UserDetails/UserDetails";
 import Payment from "../Components/Payment/Payment";
+import Axios from "axios";
+import useConfig from "../Hooks/useConfig";
 const { Step } = Steps;
 
 interface BookProps {
@@ -124,7 +126,10 @@ const Book: FC<BookProps> = ({ locations }) => {
 };
 
 export async function getServerSideProps(context) {
-  let locations = ["Rajajinagar", "Basaveshwarnagar", "MG Road"]; //GET from server
+  const { API_URL } = useConfig();
+  const res = await Axios.get(`${API_URL}/locations`);
+  const locations = res.data.location;
+  //let locations = ["Rajajinagar", "Basaveshwarnagar", "MG Road"]; //GET from server
   return {
     props: { locations }, // will be passed to the page component as props
   };

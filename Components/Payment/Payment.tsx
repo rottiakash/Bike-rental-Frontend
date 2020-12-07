@@ -6,6 +6,7 @@ import { DatePicker } from "antd";
 import { Form, Input, Button, Checkbox } from "antd";
 import { useRouter } from "next/router";
 import Spinner from "../../HOCs/spinner";
+import useConfig from "../../Hooks/useConfig";
 interface PaymentProps {
   config: config;
 }
@@ -19,6 +20,7 @@ interface Card {
 }
 
 const Payment: FC<PaymentProps> = ({ config }) => {
+  const { API_URL } = useConfig();
   const [spinning, setSpinning] = useState(false);
   const router = useRouter();
   const [card, setCard] = useState<Card>({
