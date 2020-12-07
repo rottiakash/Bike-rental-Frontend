@@ -31,11 +31,11 @@ const BikePage: FC<BikePageProps> = ({ bike, config }) => {
         }}
       >
         <span style={{ fontSize: "3rem" }} className={styles.name}>
-          {bike.name}
+          {bike.model}
         </span>
         <img
-          src={bike.img_url}
-          alt={`Image for ${bike.name}`}
+          src={bike.imageurl}
+          alt={`Image for ${bike.model}`}
           style={{ borderRadius: "50%", width: "200px", height: "200px" }}
         />
       </section>
@@ -51,7 +51,7 @@ const BikePage: FC<BikePageProps> = ({ bike, config }) => {
         }}
       >
         <span style={{ fontSize: "3rem" }} className={styles.name}>
-          ₹{bike.price}
+          ₹{bike.priceperday}
         </span>
         <Button
           type="primary"

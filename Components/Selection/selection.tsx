@@ -28,12 +28,15 @@ const Selection: FC<SelectionProps> = ({ config }) => {
             location: values.location,
           };
           //POST PAYLOAD - GET BIKES
+          axios.post(`${API_URL}/available`, payload);
           const bikes: Array<Bike> = [
             {
               id: 1,
-              name: "Bullet",
-              price: 100,
-              img_url:
+              model: "Bullet",
+              priceperday: 100,
+              location: "Rajajinagar",
+              no_of_units: 10,
+              imageurl:
                 "https://imgd.aeplcdn.com/393x221/bw/models/royal-enfield-bullet-350-ks--x--efi-bs-vi20200401130113.jpg?q=85",
             },
           ];

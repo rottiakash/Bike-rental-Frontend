@@ -1,17 +1,39 @@
 import { Button } from "antd";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import Spinner from "../HOCs/spinner";
 import styles from "./index.module.css";
-import Link from "next/link";
 export default function index() {
+  const [spinning, setSpinning] = useState(false);
+  const router = useRouter();
   return (
-    <div className={styles.title}>
-      <div className={styles.overlay}>
-        <h1 className={styles.h1}>Bike Rental System</h1>
-        <Link href="/book">
-          <Button type="primary" style={{ marginTop: "50px" }}>
+    <Spinner spinning={spinning}>
+      <div className={styles.title}>
+        <div className={styles.overlay}>
+          <h1 className={styles.h1}>Bike Rental System</h1>
+
+          <Button
+            type="primary"
+            style={{ marginTop: "50px" }}
+            onClick={() => {
+              setSpinning(true);
+              router.push("/book");
+            }}
+          >
             Book a Bike
           </Button>
-        </Link>
+          <Button
+            type="primary"
+            style={{ marginTop: "50px", backgroundColor: "chocolate" }}
+            onClick={() => {
+              setSpinning(true);
+              router.push("/admin");
+            }}
+          >
+            Admin Console
+          </Button>
+        </div>
       </div>
-    </div>
+    </Spinner>
   );
 }

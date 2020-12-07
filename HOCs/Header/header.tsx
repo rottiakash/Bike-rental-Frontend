@@ -1,12 +1,15 @@
 import { useRouter } from "next/router";
 import { FC } from "react";
 import styles from "./header.module.css";
+import { destroyCookie } from "nookies";
+
 interface HeaderProps {
   heading: string;
   showHome?: boolean;
+  showLogout?: boolean;
 }
 
-const Header: FC<HeaderProps> = ({ heading, showHome }) => {
+const Header: FC<HeaderProps> = ({ heading, showHome, showLogout }) => {
   const router = useRouter();
   return (
     <div>
@@ -26,7 +29,18 @@ const Header: FC<HeaderProps> = ({ heading, showHome }) => {
         )}
         {!showHome && <div></div>}
         <span>{heading}</span>
-        <div></div>
+        {showLogout && (
+          <button
+            className={styles.btn}
+            onClick={() => {
+              destroyCookie(null, "token");
+              router.push("/login");
+            }}
+          >
+            Logout
+          </button>
+        )}
+        {!showLogout && <div></div>}
       </div>
       <hr />
     </div>

@@ -1,3 +1,3 @@
 export default function useConfig() {
-  return { API_URL: "https://093c0ba8e3bf.ngrok.io" };
+  return { API_URL: "https://a1a1202da47a.ngrok.io" };
 }

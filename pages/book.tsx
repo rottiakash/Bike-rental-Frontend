@@ -16,9 +16,11 @@ interface BookProps {
 
 export interface Bike {
   id: number;
-  name: string;
-  price: number;
-  img_url: string;
+  priceperday: number;
+  model: string;
+  imageurl: string;
+  location: string;
+  no_of_units: number;
 }
 
 export interface config {
