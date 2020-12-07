@@ -1,6 +1,5 @@
 import { Button, Popconfirm, Table } from "antd";
 import React, { FC, useState } from "react";
-import { Bike } from "../../pages/book";
 
 export interface Reservation {
   booking_id: number;
