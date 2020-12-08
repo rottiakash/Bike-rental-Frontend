@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import Container from "../HOCs/container";
 import { parseCookies } from "nookies";
 import Header from "../HOCs/Header/header";
@@ -9,15 +9,25 @@ import Axios from "axios";
 import ReservationTable, {
   Reservation,
 } from "../Components/Reservation Table/ReservationTable";
-
+import useSWR from "swr";
+import { SERVER_URL } from "../Hooks/useConfig";
 const { TabPane } = Tabs;
 
 interface AdminProps {
-  bikes: Array<Bike>;
-  reservations: Array<Reservation>;
+  serverData: {
+    bikes: Array<Bike>;
+    reservations: Array<Reservation>;
+  };
 }
 
-const Admin: FC<AdminProps> = ({ bikes, reservations }) => {
+const fetcher = (data) =>
+  Axios.get(data[0], {
+    headers: { Authorization: `${data[1]}` },
+  }).then((res) => res.data);
+
+const Admin: FC<AdminProps> = ({ serverData }) => {
+  const { token } = parseCookies(null);
+  const { bikes, reservations } = serverData;
   const [visible, setVisible] = useState(false);
   return (
     <div>
@@ -129,31 +139,19 @@ export async function getServerSideProps(context) {
       },
     };
   }
-  const res = await Axios.get(`http://localhost:5000/getBikes`, {
+  const serverData = await Axios.get(`${SERVER_URL}/getAdmin`, {
     headers: { Authorization: `${token}` },
-  });
-  if (res.data == "TOKEN DECODE FAILED")
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  const bikes: Array<Bike> = res.data.result;
-  const res1 = await Axios.get(`http://localhost:5000/getReservations`, {
-    headers: { Authorization: `${token}` },
-  });
-  if (res1.data == "TOKEN DECODE FAILED")
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
+  }).then((x) => x.data);
 
-  const reservations: Array<Reservation> = res1.data.result;
+  if (serverData == "TOKEN DECODE FAILED")
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
 
   return {
-    props: { bikes, reservations }, // will be passed to the page component as props
+    props: { serverData }, // will be passed to the page component as props
   };
 }

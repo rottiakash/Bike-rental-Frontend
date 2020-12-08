@@ -1,5 +1,9 @@
-import { Button, Popconfirm, Table } from "antd";
+import { Button, Popconfirm, Table, notification } from "antd";
+import Axios from "axios";
+import { parseCookies } from "nookies";
 import React, { FC, useState } from "react";
+import Spinner from "../../HOCs/spinner";
+import useConfig from "../../Hooks/useConfig";
 
 export interface Reservation {
   booking_id: number;
@@ -14,6 +18,17 @@ export interface Reservation {
   model: string;
   location: string;
 }
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const openNotificationWithIcon = (type) => {
+  notification[type]({
+    message: "Reservation Deleted",
+    description: "The selected Reservation has been deleted",
+  });
+};
 
 interface ReservationTableProps {
   dataSource: Array<Reservation>;
@@ -68,43 +83,64 @@ const columns = [
 
 const ReservationTable: FC<ReservationTableProps> = ({ dataSource }) => {
   const [selected, setSelected] = useState(false);
+  const { API_URL } = useConfig();
+  const { token } = parseCookies(null);
+  const [spinning, setSpinning] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<number>();
   return (
-    <div>
-      <Popconfirm
-        title="Are you sure to delete this Reservation?"
-        okText="Yes"
-        cancelText="No"
-      >
-        <Button
-          type="primary"
-          disabled={!selected}
-          style={{
-            width: "100vw",
-            marginTop: "40px",
-            backgroundColor: "red",
-            color: "white",
+    <Spinner spinning={spinning}>
+      <div>
+        <Popconfirm
+          title="Are you sure to delete this Reservation?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={async () => {
+            setSpinning(true);
+            await Axios.post(
+              `${API_URL}/deleteReservation`,
+              { id: selectedRow },
+              {
+                headers: { Authorization: `${token}` },
+              }
+            );
+            openNotificationWithIcon("success");
+            await sleep(2000);
+            window.location.reload();
           }}
         >
-          Delete
-        </Button>
-      </Popconfirm>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        expandable={{
-          expandedRowRender: (row) => {
-            return <p>Address: {row.address}</p>;
-          },
-        }}
-        rowSelection={{
-          type: "radio",
-          onChange: (_, selectedRows) => {
-            if (selectedRows) setSelected(true);
-            else setSelected(false);
-          },
-        }}
-      />
-    </div>
+          <Button
+            type="primary"
+            disabled={!selected}
+            style={{
+              width: "100vw",
+              marginTop: "40px",
+              backgroundColor: "red",
+              color: "white",
+            }}
+          >
+            Delete
+          </Button>
+        </Popconfirm>
+        <Table
+          rowKey={"booking_id"}
+          dataSource={dataSource}
+          columns={columns}
+          expandable={{
+            expandedRowRender: (row) => {
+              return <p>Address: {row.address}</p>;
+            },
+          }}
+          rowSelection={{
+            type: "radio",
+            onChange: (_, selectedRows) => {
+              if (selectedRows) setSelected(true);
+              else setSelected(false);
+              setSelectedRow(selectedRows[0].booking_id);
+            },
+          }}
+        />
+      </div>
+    </Spinner>
   );
 };
 
