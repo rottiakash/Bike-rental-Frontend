@@ -27,19 +27,9 @@ const Selection: FC<SelectionProps> = ({ config }) => {
             endDate: values.dates[1].format(dateFormat),
             location: values.location,
           };
-          //POST PAYLOAD - GET BIKES
-          axios.post(`${API_URL}/available`, payload);
-          const bikes: Array<Bike> = [
-            {
-              id: 1,
-              model: "Bullet",
-              priceperday: 100,
-              location: "Rajajinagar",
-              no_of_units: 10,
-              imageurl:
-                "https://imgd.aeplcdn.com/393x221/bw/models/royal-enfield-bullet-350-ks--x--efi-bs-vi20200401130113.jpg?q=85",
-            },
-          ];
+
+          const res = await axios.post(`${API_URL}/available`, payload);
+          const bikes: Array<Bike> = res.data.result;
           config.setBikes(bikes);
           config.setStartDate(payload.startDate);
           config.setEndDate(payload.endDate);

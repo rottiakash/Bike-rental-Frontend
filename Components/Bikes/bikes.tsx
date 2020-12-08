@@ -7,6 +7,10 @@ interface BikesProps {
 }
 
 const Bikes: FC<BikesProps> = ({ config }) => {
+  if (config.bikes.length == 0) {
+    window.alert("No Matching bikes found");
+    window.location.reload();
+  }
   return (
     <div>
       {config.bikes.map((bike) => (

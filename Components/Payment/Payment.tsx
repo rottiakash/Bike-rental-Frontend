@@ -3,13 +3,25 @@ import { config } from "../../pages/book";
 import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 import { DatePicker } from "antd";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, notification } from "antd";
 import { useRouter } from "next/router";
 import Spinner from "../../HOCs/spinner";
 import useConfig from "../../Hooks/useConfig";
+import Axios from "axios";
 interface PaymentProps {
   config: config;
 }
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const openNotificationWithIcon = (type) => {
+  notification[type]({
+    message: "Reservation Done",
+    description: "The selected bike has been Reserved",
+  });
+};
 
 interface Card {
   cvc: string;
@@ -50,11 +62,21 @@ const Payment: FC<PaymentProps> = ({ config }) => {
         />
         <Form
           style={{ marginTop: "40px" }}
-          onFinish={() => {
+          onFinish={async () => {
             setSpinning(true);
-            console.log(config.reserve_payload);
-            //POST TO SERVER
-            router.push("/success");
+            const data = await Axios.post(
+              `${API_URL}/reserve`,
+              config.reserve_payload
+            ).then((x) => x.data);
+            if (data == "Done") {
+              openNotificationWithIcon("success");
+              await sleep(2000);
+              router.push("/success");
+            } else {
+              window.alert(
+                `The Payment was not completed. Please try again in some time`
+              );
+            }
           }}
         >
           <Form.Item
